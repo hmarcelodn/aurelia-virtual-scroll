@@ -13,14 +13,14 @@
     <div>100% Testing</div>
 
 
-    <div class="lazy-scroll-container">
+    <div class="lazy-scroll-container" style="border: 1px solid blue;">
         <table class="table" lazy-scroll="slot-height.bind: 400; 
                                           slot-line-height.bind: 70;
                                           fetcher.bind: fetcher; 
                                           storage.bind: list;      
                                           virtual-storage.bind: vlist;                 
                                           debug.bind: true;
-                                          window-scroller.bind: true">
+                                          window-scroller.bind: false;">
             <tbody>
                 <tr repeat.for="item of vlist" style="height: 70px;">
                     <td>${item.propertyOne}</td>
@@ -30,5 +30,7 @@
             </tbody>
         </table>                 
     </div>           
-
+    <div>
+        something below
+    </div>
 </template>

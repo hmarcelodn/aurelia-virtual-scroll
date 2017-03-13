@@ -24,19 +24,19 @@ export class AureliaLazyScroll{
         this.viewport;
         this.viewportVirtual;
         this.viewportContainer;
+        this.scrollContainer;
     }
 
     attached(){             
 
         //View-Port Mode
-        this.element.style.height = this.slotHeight + 'px';            
+        this.element.style.height = this.slotHeight + 'px';
         this.element.style.overflowY = 'hidden';      
             
         let viewportNode = document.createElement('div');
         let viewportSubNode = document.createElement('div');
         this.viewportContainer = document.getElementsByClassName('lazy-scroll-container')[0];
         this.viewportContainer.style.position = 'relative';
-        
 
         if(this.windowScroller){
             this.viewportContainer.style.height = (this.storage.length * this.slotLineHeight) + 'px'; 
@@ -60,7 +60,14 @@ export class AureliaLazyScroll{
         this.viewport.style.height = this.slotHeight + 'px';
  
         this.viewport.style.overflowY = 'scroll';
-        this.viewport.style.right = 0;     
+        this.viewport.style.right = 0;
+        this.viewport.style.border = '1px solid';
+
+        if(this.windowScroller) {
+            this.scrollContainer = window;
+        } else {
+            this.scrollContainer = this.viewport;
+        }
 
         this.taskQueue.queueTask(() => {
             this.computeDimensions();
@@ -68,15 +75,26 @@ export class AureliaLazyScroll{
 
         this.element.addEventListener('wheel', (e) => {
             this.viewport.scrollTop += e.deltaY;
+            console.log('wheel');
         });
 
-        this.viewport.addEventListener('scroll', () => {                                                            
+        this.scrollContainer.addEventListener('scroll', () => {
+            console.log('scroll');
+            console.log('this.substractDiff', this.substractDiff, 'this.slotHeight', this.slotHeight);
             this.computeDimensions();
 
             if(this.substractDiff <= this.slotHeight){
                 this.fetchData();
             }
-        });    
+        });
+
+        // to re render
+        // window.addEventListener('wheel', (e) => {
+        //     console.log('wheel window');
+        // });
+        // window.addEventListener('scroll', (e) => {
+        //     console.log('WINDOW scroll!');
+        // });
     }    
 
     computeDimensions(){          
@@ -84,6 +102,9 @@ export class AureliaLazyScroll{
         // View Port Mode
         this.scrollY = Math.floor(this.viewport.scrollTop);
         this.scrollHeight = this.viewport.scrollHeight;
+        console.log('scrollY', this.scrollY);
+        console.log('scrollHeight', this.scrollHeight);
+
         this.substractDiff = this.scrollHeight - this.scrollY;
         this.numItemsPerPage = Math.max(Math.ceil(this.slotHeight / this.slotLineHeight), 0);
 
@@ -94,12 +115,13 @@ export class AureliaLazyScroll{
         this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);     
 
         this.viewportVirtual.style.height = (this.storage.length * this.slotLineHeight) + 'px';
+        this.viewportVirtual.style.border = '1px solid red';
 
         console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
         console.log('lastVisibleIdex:' + this.lastVisibleIndex);
 
-        this.virtualStorage = this.storage.slice(this.firstVisibleIndex, this.lastVisibleIndex); 
+        this.virtualStorage = this.storage.slice(this.firstVisibleIndex, this.lastVisibleIndex);
     }  
 
     fetchData(){
