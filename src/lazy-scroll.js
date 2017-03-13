@@ -25,6 +25,7 @@ export class AureliaLazyScroll{
         this.viewportVirtual;
         this.viewportContainer;
         this.scrollContainer;
+        this.ticking = false;
     }
 
     attached(){             
@@ -37,13 +38,6 @@ export class AureliaLazyScroll{
         let viewportSubNode = document.createElement('div');
         this.viewportContainer = document.getElementsByClassName('lazy-scroll-container')[0];
         this.viewportContainer.style.position = 'relative';
-
-        if(this.windowScroller){
-            this.viewportContainer.style.height = (this.storage.length * this.slotLineHeight) + 'px'; 
-        }
-        else{
-            this.viewportContainer.style.height = this.slotHeight + 'px';
-        }
         
         viewportNode.setAttribute('id', 'viewport');
         viewportSubNode.setAttribute('id', 'viewport-virtual');
@@ -57,16 +51,23 @@ export class AureliaLazyScroll{
         this.viewport.style.position = 'absolute';
         this.viewport.style.backgroundColor = '#ddd';
         this.viewport.style.width = 'auto';
-        this.viewport.style.height = this.slotHeight + 'px';
- 
-        this.viewport.style.overflowY = 'scroll';
-        this.viewport.style.right = 0;
-        this.viewport.style.border = '1px solid';
 
-        if(this.windowScroller) {
+        this.viewport.style.right = 0;
+
+        if(this.windowScroller) { 
             this.scrollContainer = window;
+            this.viewportContainer.style.height = (this.storage.length * this.slotLineHeight) + 'px';
+            this.slotHeight = window.innerHeight;
+            // Add resize
+            window.addEventListener('resize', () => {
+
+            });
+
         } else {
+            this.viewportContainer.style.height = this.slotHeight + 'px';
             this.scrollContainer = this.viewport;
+            this.viewport.style.overflowY = 'scroll';
+            this.viewport.style.height = this.slotHeight + 'px';
         }
 
         this.taskQueue.queueTask(() => {
@@ -75,33 +76,49 @@ export class AureliaLazyScroll{
 
         this.element.addEventListener('wheel', (e) => {
             this.viewport.scrollTop += e.deltaY;
-            console.log('wheel');
         });
 
         this.scrollContainer.addEventListener('scroll', () => {
-            console.log('scroll');
-            console.log('this.substractDiff', this.substractDiff, 'this.slotHeight', this.slotHeight);
             this.computeDimensions();
-
+            this.setFixedList();
             if(this.substractDiff <= this.slotHeight){
                 this.fetchData();
             }
         });
 
-        // to re render
-        // window.addEventListener('wheel', (e) => {
-        //     console.log('wheel window');
-        // });
-        // window.addEventListener('scroll', (e) => {
-        //     console.log('WINDOW scroll!');
-        // });
-    }    
+        // Test later for better performance on window scroll event
+        // window.addEventListener('scroll', function(e) {
+        //     if (!this.ticking) {
+        //         window.requestAnimationFrame(function() {
 
-    computeDimensions(){          
-        
+        //             this.computeDimensions();
+        //             this.setFixedList();
+        //             if(this.substractDiff <= this.slotHeight){
+        //                 this.fetchData();
+        //             }
+
+        //             this.ticking = false;
+        //         }.bind(this));
+        //     }
+        //     this.ticking = true;
+        // }.bind(this));
+    }
+
+    setFixedList() {
+        if (this.windowScroller) {
+            if (this.scrollContainer.scrollY > this.viewportContainer.offsetTop) {
+                this.element.style.position = 'fixed';
+                this.element.style.top = '0';
+            } else {
+                this.element.style.removeProperty('position'); // TODO replace with previous
+            }
+        }
+    }
+
+    computeDimensions() {
         // View Port Mode
-        this.scrollY = Math.floor(this.viewport.scrollTop);
-        this.scrollHeight = this.viewport.scrollHeight;
+        this.scrollY = this.windowScroller ? this.scrollContainer.scrollY : this.viewport.scrollTop;
+        this.scrollHeight = this.scrollContainer.scrollHeight;
         console.log('scrollY', this.scrollY);
         console.log('scrollHeight', this.scrollHeight);
 
@@ -115,7 +132,6 @@ export class AureliaLazyScroll{
         this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);     
 
         this.viewportVirtual.style.height = (this.storage.length * this.slotLineHeight) + 'px';
-        this.viewportVirtual.style.border = '1px solid red';
 
         console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
