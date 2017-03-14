@@ -14,7 +14,7 @@
 
 
     <div class="lazy-scroll-container" style="border: 1px solid blue;">
-        <table id="test" class="table" lazy-scroll="slot-height.bind: 400; 
+        <!--<table id="test" border="1" class="table" lazy-scroll="slot-height.bind: 400; 
                                           slot-line-height.bind: 70;
                                           fetcher.bind: fetcher; 
                                           storage.bind: list;      
@@ -28,7 +28,21 @@
                     <td>Test</td>
                 </tr>
             </tbody>
-        </table>                 
+        </table>-->
+        <div lazy-scroll="slot-height.bind: 400;
+                        slot-line-height.bind: 70;
+                        fetcher.bind: fetcher;
+                        storage.bind: list;
+                        virtual-storage.bind: vlist;
+                        debug.bind: true;
+                        window-scroller.bind: true;">
+            <div repeat.for="item of vlist"
+                 style="height: 70px; border: 1px solid; position: ${item.position}; left: 0px; top: ${item.top}; width: ${item.width}">
+                ${item.propertyOne}<br>
+                ${item.propertyOne}<br>
+                ${item.propertyOne}
+            </div>
+        </div>
     </div>           
     <div>
         something below

@@ -43,6 +43,10 @@ export class Test{
                 { "propertyOne": "Test40" },                      
         ];
         this.vlist = [];
+
+        for(let i = 0; i < 1000; i++) {
+            this.list.push({propertyOne: 'Test' + i});
+        }
     }
     
     fetcher(){
