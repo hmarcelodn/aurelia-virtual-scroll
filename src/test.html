@@ -12,6 +12,7 @@
     <div>100% Testing</div>
     <div>100% Testing</div>
 
+    
     <div class="lazy-scroll-container" style="border: 1px solid blue;">
         <div lazy-scroll="slot-height.bind: 400;
                         slot-line-height.bind: 70;
@@ -19,9 +20,8 @@
                         storage.bind: list;
                         virtual-storage.bind: vlist;
                         debug.bind: true;
-                        window-scroller.bind: true;">
-            <div repeat.for="item of vlist"
-                 style="height: 70px; border: 1px solid; position: ${item.position}; left: 0px; top: ${item.top}; width: ${item.width}">
+                        window-scroller.bind: false;">
+            <div repeat.for="item of vlist" style="height: 70px; border: 1px solid; position: ${item.position}; left: 0px; top: ${item.top}; width: ${item.width}">
                 ${item.propertyOne}<br>
                 ${item.propertyOne}<br>
                 ${item.propertyOne}

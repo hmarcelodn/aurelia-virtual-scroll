@@ -30,28 +30,8 @@ export class AureliaLazyScroll{
     }
 
     attached() {
-        //View-Port Mode
-        this.element.style.overflowY = 'hidden';
-            
-        let viewportNode = document.createElement('div');
-        let viewportSubNode = document.createElement('div');
         this.viewportContainer = document.getElementsByClassName('lazy-scroll-container')[0];
-        this.viewportContainer.style.position = 'relative';
-        
-        viewportNode.setAttribute('id', 'viewport');
-        viewportSubNode.setAttribute('id', 'viewport-virtual');
-
-        viewportNode.appendChild(viewportSubNode);
-        this.element.parentNode.insertBefore(viewportNode, this.element);
-
-        this.viewport = document.getElementById('viewport');
-        this.viewportVirtual = document.getElementById('viewport-virtual');
-
-        this.viewport.style.position = 'absolute';
-        this.viewport.style.backgroundColor = '#ddd';
-        this.viewport.style.width = 'auto';
-
-        this.viewport.style.right = 0;
+        this.viewportContainer.style.position = 'relative';    
 
         if(this.windowScroller) { 
             this.scrollContainer = window;
@@ -67,41 +47,35 @@ export class AureliaLazyScroll{
 
                 this.lastScrollPosition = window.scrollY;
             });
-
-            // Add resize
-            window.addEventListener('resize', () => {
-
-            });
-
         } else {
-            this.element.style.height = this.slotHeight + 'px';
-            this.element.style.position = 'relative';
-            this.viewportContainer.style.height = this.slotHeight + 'px';
-            this.scrollContainer = this.viewport;
-            this.viewport.style.overflowY = 'scroll';
-            this.viewport.style.height = this.slotHeight + 'px';
-            this.viewport.style.zIndex = '10';
+            this.viewportContainer.style.height = this.slotHeight + 'px';            
+            this.viewportContainer.style.overflowY = 'scroll'; 
+            this.scrollContainer = this.viewportContainer;
 
-            this.element.addEventListener('wheel', (e) => {
-                this.viewport.scrollTop += e.deltaY;
-            });
+            this.element.style.height = (
+                ((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) 
+                + 'px';   
 
-            this.viewport.addEventListener('scroll', () => {
-                this.computeDimensions();
-                if(this.substractDiff <= this.slotHeight){
-                    this.fetchData();
-                }
-            });
+            this.scrollContainer.addEventListener('scroll', () => {
+                //if (window.scrollY > this.viewportContainer.offsetTop) {
+                    this.computeDimensions(false);
+                //} else if (window.scrollY - this.lastScrollPosition < 0 && window.scrollY <= this.viewportContainer.offsetTop) {
+                  //  this.computeDimensions(false);
+                //}
+
+                this.lastScrollPosition = window.scrollY;
+            });                
+
         }
 
         this.taskQueue.queueTask(() => {
-            this.computeDimensions();
+            this.computeDimensions(false);
         });
     }
 
     computeDimensions(fixTop = false) {
         // View Port Mode
-        this.scrollY = this.windowScroller ? window.scrollY : this.viewport.scrollTop;
+        this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
         this.scrollHeight = this.scrollContainer.scrollHeight;
         this.substractDiff = this.scrollHeight - this.scrollY;
         this.numItemsPerPage = Math.max(Math.ceil(this.slotHeight / this.slotLineHeight), 0);
@@ -112,7 +86,8 @@ export class AureliaLazyScroll{
 
         this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);     
 
-        this.viewportVirtual.style.height = (this.storage.length * this.slotLineHeight) + 'px';
+        this.firstVisibleIndex = this.firstVisibleIndex !== 0 ? this.firstVisibleIndex - 1 : this.firstVisibleIndex;   
+        this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 1;      
 
         console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
@@ -120,16 +95,14 @@ export class AureliaLazyScroll{
         
         let vList =  this.storage.slice(this.firstVisibleIndex, this.lastVisibleIndex);
 
-        if (this.windowScroller) {
-            let initialTop = fixTop ?
+        let initialTop = fixTop ?
                             this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop :
                             this.slotLineHeight * this.firstVisibleIndex;
 
-            for(let i = 0; i < vList.length; i++) {
+        for(let i = 0; i < vList.length; i++) {
                 vList[i].top = (initialTop + (this.slotLineHeight * i)) + 'px';
                 vList[i].position = 'absolute';
                 vList[i].width = '100%';
-            }
         }
 
         this.virtualStorage = vList;
