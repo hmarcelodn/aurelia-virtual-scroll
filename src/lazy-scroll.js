@@ -1,4 +1,16 @@
-import { inject, bindable, bindingMode, customAttribute, BindingEngine, TaskQueue } from 'aurelia-framework';
+import { 
+    inject, 
+    bindable, 
+    bindingMode, 
+    customAttribute, 
+    BindingEngine, 
+    TaskQueue,
+    ViewCompiler,
+    ViewResources,
+    Container,
+    ViewSlot,
+    createOverrideContext    
+} from 'aurelia-framework';
 
 @bindable('fetcher')
 @bindable({ name: 'storage', defaultValue: [], defaultBindingMode: bindingMode.twoWay  })
@@ -7,12 +19,20 @@ import { inject, bindable, bindingMode, customAttribute, BindingEngine, TaskQueu
 @bindable({ name: 'slotLineHeight', defaultValue: 20, defaultBindingMode: bindingMode.oneWay })
 @bindable({ name: 'debug', defaultValue: false, defaultBindingMode: bindingMode.oneWay  })
 @bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay  })
+@bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay  })
 
 @customAttribute("lazy-scroll")
-@inject(Element, BindingEngine, TaskQueue)
+@inject(Element, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container)
 export class AureliaLazyScroll{
-    constructor(element, bindingEngine, taskQueue){
+    constructor(element, bindingEngine, taskQueue, viewCompiler, viewResources, container){
+        
+        // Aurelia Dependencies
         this.element = element;
+        this.viewCompiler = viewCompiler;
+        this.viewResources = viewResources;
+        this.container = container;
+
+        // Model
         this.scrollTop;
         this.scrollHeight;
         this.substractDiff;
@@ -24,13 +44,13 @@ export class AureliaLazyScroll{
         this.viewport;
         this.viewportVirtual;
         this.viewportContainer;
-        this.scrollContainer;
+        this.scrollContainer;        
         this.ticking = false;
         this.lastScrollPosition = 0;
     }
 
     attached() {
-        this.viewportContainer = document.getElementsByClassName('lazy-scroll-container')[0];
+        this.viewportContainer = document.getElementsByClassName(this.viewportElement)[0];
         this.viewportContainer.style.position = 'relative';    
 
         if(this.windowScroller) { 
@@ -39,6 +59,7 @@ export class AureliaLazyScroll{
             this.slotHeight = window.innerHeight;
 
             window.addEventListener('scroll', () => {
+                
                 if (window.scrollY > this.viewportContainer.offsetTop) {
                     this.computeDimensions(true);
                 } else if (window.scrollY - this.lastScrollPosition < 0 && window.scrollY <= this.viewportContainer.offsetTop) {
@@ -47,6 +68,7 @@ export class AureliaLazyScroll{
 
                 this.lastScrollPosition = window.scrollY;
             });
+
         } else {
             this.viewportContainer.style.height = this.slotHeight + 'px';            
             this.viewportContainer.style.overflowY = 'scroll'; 
@@ -57,13 +79,7 @@ export class AureliaLazyScroll{
                 + 'px';   
 
             this.scrollContainer.addEventListener('scroll', () => {
-                //if (window.scrollY > this.viewportContainer.offsetTop) {
-                    this.computeDimensions(false);
-                //} else if (window.scrollY - this.lastScrollPosition < 0 && window.scrollY <= this.viewportContainer.offsetTop) {
-                  //  this.computeDimensions(false);
-                //}
-
-                this.lastScrollPosition = window.scrollY;
+                this.computeDimensions(false);
             });                
 
         }
@@ -116,6 +132,10 @@ export class AureliaLazyScroll{
 
             this.computeDimensions();
         });
+    }
+
+    rowBuilder(){
+
     }
 
 }
