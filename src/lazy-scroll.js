@@ -1,5 +1,6 @@
 import { 
     inject, 
+    noView,
     bindable, 
     bindingMode, 
     customAttribute, 
@@ -21,6 +22,7 @@ import {
 @bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay  })
 @bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay  })
 
+@noView()
 @customAttribute("lazy-scroll")
 @inject(Element, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container)
 export class AureliaLazyScroll{
@@ -47,9 +49,14 @@ export class AureliaLazyScroll{
         this.scrollContainer;        
         this.ticking = false;
         this.lastScrollPosition = 0;
+
+        //Compiler
+        this.viewSlot;
     }
 
     attached() {
+
+        this.viewSlot = new ViewSlot(this.element, true);
         this.viewportContainer = document.getElementsByClassName(this.viewportElement)[0];
         this.viewportContainer.style.position = 'relative';    
 
@@ -105,7 +112,7 @@ export class AureliaLazyScroll{
         this.firstVisibleIndex = this.firstVisibleIndex !== 0 ? this.firstVisibleIndex - 1 : this.firstVisibleIndex;   
         this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 1;      
 
-        console.clear();
+        //console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
         console.log('lastVisibleIdex:' + this.lastVisibleIndex);
         
@@ -122,6 +129,8 @@ export class AureliaLazyScroll{
         }
 
         this.virtualStorage = vList;
+
+        this.rowBuilder();
     }  
 
     fetchData(){
@@ -135,6 +144,25 @@ export class AureliaLazyScroll{
     }
 
     rowBuilder(){
+        
+        this.viewSlot.removeAll(true, true);
+
+        for(let i = 0; i < this.virtualStorage.length; i++) {
+
+            let viewFactory = this.viewCompiler.compile(
+                '<template>' + 
+                    '<div style="height: 70px; border: 1px solid; position: ${position}; left: 0px; top: ${top}; width: ${width}">' + 
+                       '<input value.bind="propertyOne" />' + 
+                    '</div>' + 
+                '</template>'
+            );
+        
+            let view = viewFactory.create(this.element);  
+
+            this.viewSlot.add(view);        
+            view.bind(this.virtualStorage[i], createOverrideContext(this.virtualStorage[i]));
+            view.attached();
+        }
 
     }
 
