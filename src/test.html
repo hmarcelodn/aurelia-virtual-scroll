@@ -3,17 +3,20 @@
     <require from="lazy-scroll.js"></require>
     <require from="bootstrap/css/bootstrap.css"></require>      
 
-    <div>100% Testing</div>
-    <div>100% Testing</div>
-    <div>100% Testing</div>
-    <div>100% Testing</div>
-    <div>100% Testing</div>
-    <div>100% Testing</div>
-    <div>100% Testing</div>
-    <div>100% Testing</div>
-    <div id="test" ref='containerElement'></div>
+    <h1>Aurelia Virtual Scroller Plugin (aurelia-v-scroll)</h1>            
 
-    
+    <div class="row">
+        <div class="col-sm-4">
+            DOM Elements: ${domElements}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4">
+            Observable Elements: ${list.length}
+        </div>
+    </div>    
+
     <div class="lazy-scroll-container" style="border: 1px solid blue;">
         <div lazy-scroll="slot-height.bind: 400;
                         slot-line-height.bind: 70;
@@ -21,14 +24,10 @@
                         storage.bind: list;
                         virtual-storage.bind: vlist;
                         debug.bind: true;
-                        window-scroller.bind: true;
+                        window-scroller.bind: false;
                         viewport-element.bind: 'lazy-scroll-container';
                         callback.bind: buildRowCallback">         
         </div>
     </div>    
 
-    <div>something below</div>
-    <div>something below</div>
-    <div>something below</div>
-    <div>something below</div>
 </template>

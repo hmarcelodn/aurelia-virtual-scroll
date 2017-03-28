@@ -110,9 +110,9 @@ export class AureliaLazyScroll{
         this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);     
 
         this.firstVisibleIndex = this.firstVisibleIndex !== 0 ? this.firstVisibleIndex - 1 : this.firstVisibleIndex;   
-        this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 10;      
+        this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 2;      
 
-        //console.clear();
+        console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
         console.log('lastVisibleIdex:' + this.lastVisibleIndex);
         
@@ -123,7 +123,7 @@ export class AureliaLazyScroll{
                             this.slotLineHeight * this.firstVisibleIndex;
 
         for(let i = 0; i < vList.length; i++) {
-                vList[i].top = (initialTop + (this.slotLineHeight * i)) + 'px';
+            vList[i].top = (initialTop + (this.slotLineHeight * i)) + 'px';
         }
 
         this.virtualStorage = vList;
@@ -148,7 +148,7 @@ export class AureliaLazyScroll{
         for(let i = 0; i < this.virtualStorage.length; i++) {
             let viewFactory = this.viewCompiler.compile(
                 '<template>' + 
-                    '<div style="height: 70px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + 
+                    '<div class="aurelia-v-scroll-row" style="height: 70px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + 
                        this.callback() + 
                     '</div>' + 
                 '</template>'
