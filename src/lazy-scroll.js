@@ -98,7 +98,6 @@ export class AureliaLazyScroll{
     }
 
     computeDimensions(fixTop = false) {
-        // View Port Mode
         this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
         this.scrollHeight = this.scrollContainer.scrollHeight;
         this.substractDiff = this.scrollHeight - this.scrollY;
