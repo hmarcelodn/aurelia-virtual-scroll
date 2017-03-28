@@ -13,4 +13,11 @@ export class Test{
            return resolve([{ "propertyOne": "Test" }]); 
         });        
     }
+
+    buildRowCallback(){
+        console.log("Hello World!");
+
+        return "<div>${propertyOne} + ${propertyOne}</div>";
+    }
+
 }

@@ -21,6 +21,7 @@ import {
 @bindable({ name: 'debug', defaultValue: false, defaultBindingMode: bindingMode.oneWay  })
 @bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay  })
 @bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay  })
+@bindable({ name: 'callback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay })
 
 @noView()
 @customAttribute("lazy-scroll")
@@ -110,7 +111,7 @@ export class AureliaLazyScroll{
         this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);     
 
         this.firstVisibleIndex = this.firstVisibleIndex !== 0 ? this.firstVisibleIndex - 1 : this.firstVisibleIndex;   
-        this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 1;      
+        this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 10;      
 
         //console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
@@ -148,11 +149,10 @@ export class AureliaLazyScroll{
         this.viewSlot.removeAll(true, true);
 
         for(let i = 0; i < this.virtualStorage.length; i++) {
-
             let viewFactory = this.viewCompiler.compile(
                 '<template>' + 
                     '<div style="height: 70px; border: 1px solid; position: ${position}; left: 0px; top: ${top}; width: ${width}">' + 
-                       '<input value.bind="propertyOne" />' + 
+                       this.callback() + 
                     '</div>' + 
                 '</template>'
             );
