@@ -151,7 +151,7 @@ export class AureliaLazyScroll{
         for(let i = 0; i < this.virtualStorage.length; i++) {
             let viewFactory = this.viewCompiler.compile(
                 '<template>' + 
-                    '<div style="height: 70px; border: 1px solid; position: ${position}; left: 0px; top: ${top}; width: ${width}">' + 
+                    '<div style="height: 70px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + 
                        this.callback() + 
                     '</div>' + 
                 '</template>'
