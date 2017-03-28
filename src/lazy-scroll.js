@@ -124,8 +124,6 @@ export class AureliaLazyScroll{
 
         for(let i = 0; i < vList.length; i++) {
                 vList[i].top = (initialTop + (this.slotLineHeight * i)) + 'px';
-                vList[i].position = 'absolute';
-                vList[i].width = '100%';
         }
 
         this.virtualStorage = vList;
