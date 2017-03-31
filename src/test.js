@@ -26,7 +26,7 @@ export class Test{
 
     buildRowCallback(){
         // I can use jsx in order to avoid string html
-        return "<div>${propertyOne}</div>";
+        return "<div>${propertyOne}</div>";   
     }
 
 }
