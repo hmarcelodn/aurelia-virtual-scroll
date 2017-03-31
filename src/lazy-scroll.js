@@ -144,10 +144,15 @@ export class AureliaLazyScroll{
                 
                 this.currentBreakPoint = breakpointConfig;
                 this.slotLineHeight = breakpointConfig.height;
-                this.viewportContainer.style.height = (((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) + 'px';
+                
+                this.resizeViewPortContainer();
                 this.computeDimensions(false);
             }
         }
+    }
+
+    resizeViewPortContainer(){
+        this.viewportContainer.style.height = (((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) + 'px';
     }
 
     fetchData(){
@@ -156,9 +161,10 @@ export class AureliaLazyScroll{
                 this.storage.push(data[i]);   
             }
 
+            this.resizeViewPortContainer();
             this.computeDimensions();
         });
-    }
+    }    
 
     rowBuilder(){        
         this.viewSlot.removeAll(true, true);
