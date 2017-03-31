@@ -87,5 +87,7 @@
     },
     "devDependencies": {}
   },
-  "dependencies": {}
+  "dependencies": {
+    "aurelia-resize": "^1.0.4"
+  }
 }
