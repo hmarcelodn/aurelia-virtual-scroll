@@ -25,9 +25,9 @@ import {
 @bindable({ name: 'breakpoints', defaultValue: [], defaultBindingMode: bindingMode.oneWay })
 
 @noView()
-@customAttribute("lazy-scroll")
+@customAttribute("v-scroll")
 @inject(Element, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container)
-export class AureliaLazyScroll{
+export class AureliaVirtualScroll{
     constructor(element, bindingEngine, taskQueue, viewCompiler, viewResources, container){
         
         // Aurelia Dependencies
@@ -179,7 +179,7 @@ export class AureliaLazyScroll{
         for(let i = 0; i < this.virtualStorage.length; i++) {
             let viewFactory = this.viewCompiler.compile(
                 '<template>' + 
-                    '<div class="aurelia-v-scroll-row" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + 
+                    '<div class="aurelia-virtual-scroll-row" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + 
                        this.callback(this.virtualStorage[i]) + 
                     '</div>' + 
                 '</template>'
@@ -198,7 +198,7 @@ export class AureliaLazyScroll{
      
         let viewFactory = this.viewCompiler.compile(
             '<template>' + 
-                '<div class="header" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + '0px' + '; width: 100%">' 
+                '<div class="aurelia-virtual-scroll-header" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + '0px' + '; width: 100%">' 
                     + this.headerCallback() +
                 '</div>' + 
             '</template>'
