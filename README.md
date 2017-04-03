@@ -9,7 +9,6 @@
     npm install aurelia-virtual-scroller --save
 
 
-
 **Usage**
 
 aurelia-virtual-scroller is a custom-attribute you can add to a markup section when you want to virtualize an observable list. Below is a full configuration example:
