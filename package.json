@@ -1,6 +1,6 @@
 {
   "name": "aurelia-virtual-scroller",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Aurelia Virtual Scrolling for large lists w/breakpoints support for using Responsive Design.",
   "keywords": [
     "aurelia",
