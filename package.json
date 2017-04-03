@@ -1,22 +1,27 @@
 {
-  "name": "aurelia-skeleton-plugin",
-  "version": "1.0.1",
-  "description": "A starter kit for building an Aurelia plugin.",
+  "name": "aurelia-virtual-scroller",
+  "version": "1.0.0",
+  "description": "Aurelia Virtual Scrolling for large lists w/breakpoints support for using Responsive Design.",
   "keywords": [
     "aurelia",
     "plugin",
-    "skeleton"
+    "virtual",
+    "virtualization",
+    "scroller",
+    "infinite",
+    "infinite-scroll",
+    "aurelia-virtualization"
   ],
   "homepage": "http://aurelia.io",
   "bugs": {
-    "url": "https://github.com/aurelia/skeleton-plugin/issues"
+    "url": "https://github.com/hmarcelodn/aurelia-virtual-scroll/issues"
   },
-  "license": "CC0-1.0",
-  "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
+  "license": "Apache-2.0",
+  "author": "Hugo Marcelo Del Negro <hmdelnegro@gmail.com> (https://github.com/hmarcelodn/)",
   "main": "dist/commonjs/index.js",
   "repository": {
     "type": "git",
-    "url": "http://github.com/aurelia/skeleton-plugin"
+    "url": "https://github.com/hmarcelodn/aurelia-virtual-scroll"
   },
   "devDependencies": {
     "aurelia-tools": "^1.0.0",
