@@ -21,6 +21,7 @@ import {
 @bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay  })
 @bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay  })
 @bindable({ name: 'callback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay })
+@bindable({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay })
 @bindable({ name: 'breakpoints', defaultValue: [], defaultBindingMode: bindingMode.oneWay })
 
 @noView()
@@ -36,6 +37,7 @@ export class AureliaLazyScroll{
         this.container = container;
 
         // Model
+        this.useHeader = false;
         this.scrollTop;
         this.scrollHeight;
         this.substractDiff;
@@ -59,6 +61,8 @@ export class AureliaLazyScroll{
     }
 
     attached() {
+        if(this.headerCallback !== undefined && typeof this.headerCallback === "function")
+            this.useHeader = true;
 
         this.viewSlot = new ViewSlot(this.element, true);
         this.viewportContainer = document.getElementsByClassName(this.viewportElement)[0];
@@ -96,8 +100,8 @@ export class AureliaLazyScroll{
         // Responsive Design
         window.addEventListener('resize', this.detectBreakPoints.bind(this));
 
-        this.taskQueue.queueTask(() => {
-            this.computeDimensions(false);
+        this.taskQueue.queueTask(() => {            
+            this.computeDimensions(false);            
         });
     }
 
@@ -120,13 +124,16 @@ export class AureliaLazyScroll{
 
         let initialTop = fixTop ?
                          this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop :
-                         this.slotLineHeight * this.firstVisibleIndex;        
+                         (this.slotLineHeight * this.firstVisibleIndex);  
+
+        if(this.useHeader && !fixTop) initialTop =+ this.slotLineHeight;          
 
         for(let i = 0; i < this.virtualStorage.length; i++) {
-            this.virtualStorage[i].top = (initialTop + (this.slotLineHeight * i)) + 'px';
+            this.virtualStorage[i].top = (initialTop + (this.slotLineHeight * i))  + 'px';            
         }                        
         
         this.rowBuilder();
+        if(this.useHeader && !fixTop) this.headerBuilder();
     }  
 
     detectBreakPoints(){
@@ -185,6 +192,23 @@ export class AureliaLazyScroll{
             view.attached();
         }
 
+    }
+
+    headerBuilder(){        
+     
+        let viewFactory = this.viewCompiler.compile(
+            '<template>' + 
+                '<div class="header" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + '0px' + '; width: 100%">' 
+                    + this.headerCallback() +
+                '</div>' + 
+            '</template>'
+        );
+    
+        let view = viewFactory.create(this.element);  
+
+        this.viewSlot.insert(0,view);        
+        view.bind(this.virtualStorage[0], createOverrideContext(this.virtualStorage[0]));
+        view.attached();        
     }
 
 }
