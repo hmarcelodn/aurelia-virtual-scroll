@@ -1,0 +1,118 @@
+<<<<<<< HEAD
+# aurelia-virtual-scroller
+
+## Virtualize the list
+
+**aurelia-virtual-scroller** allows to virtualize a list without losing you observer model context. It will help to reduce significantly the render time from the browser from lineal to constant time. It its mobile friendly (the reason it was created for) and with some configurations that allows to use this plugin in a responsive design application. Its open source and everybody can collaborate with its code base to improve and have a better plugin.
+
+**Installation**
+
+    npm install aurelia-virtual-scroller --save
+
+
+
+**Usage**
+
+aurelia-virtual-scroller is a custom-attribute you can add to a markup section when you want to virtualize an observable list. Below is a full configuration example:
+
+           <div v-scroll="slot-height.bind: 400;
+                          slot-line-height.bind: 70;
+                          fetcher.bind: fetcher;
+                          storage.bind: list;
+                          debug.bind: true;
+                          window-scroller.bind: true;
+                          viewport-element.bind: 'lazy-scroll-container';
+                          callback.bind: buildRowCallback;
+                          breakpoints.bind: 
+                            [
+                                { breakpointFrom: 400, breakpointTo: 900, height: 100 },
+                                { breakpointFrom: 100, breakpointTo: 399, height: 200 },
+                                { breakpointFrom: 900, breakpointTo: 3000, height: 70 }
+                            ];">         
+        </div>
+
+
+**Parameters Table**
+
+1. ***slot-height:*** If you want to virtualize a container you need to specify in pixels the total height for that container.
+2. ***slot-line-height:*** Its the initial height for every row. Its specific and any content overflowed will be hidden. If you want to support responsive behavior check the breakpoints option.
+3. ***fetcher:*** A function that will be called by the plugin for infinite scroll support.
+4. ***storage***: An observable array to virtualize into the container.
+5. ***debug***: Enable console information from the plugin.
+6. ***window-scroller:*** Enable full window virtualization.
+7. ***callback:*** A callback passed that can be used for build the row. Its a required parameter which returns a string type that supports aurelia syntax since the plugin will compile that. It retuns a promise.
+8. ***breakpoints:*** Specify for a width range which height will the rows measure.
+
+**Callback Parameter Sample**
+
+    buildRowCallback(item){
+           return "<div>${propertyOne}</div>";   
+    }
+
+**Fetcher Sample**
+
+    fetcher(){
+        return new Promise((resolve, reject) => {
+           return resolve([{ "propertyOne": "Test" }]); 
+        });        
+    }
+=======
+# aurelia-skeleton-plugin
+
+[![ZenHub](https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png)](https://zenhub.io)
+[![Join the chat at https://gitter.im/aurelia/discuss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/aurelia/discuss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+This skeleton is part of the [Aurelia](http://www.aurelia.io/) platform. It sets up a standard aurelia plugin using gulp to build your ES6 code with the Babel compiler. Karma/Jasmine testing is also configured.
+
+> To keep up to date on [Aurelia](http://www.aurelia.io/), please visit and subscribe to [the official blog](http://blog.aurelia.io/) and [our email list](http://eepurl.com/ces50j). We also invite you to [follow us on twitter](https://twitter.com/aureliaeffect). If you have questions, please [join our community on Gitter](https://gitter.im/aurelia/discuss) or use [stack overflow](http://stackoverflow.com/search?q=aurelia). Documentation can be found [in our developer hub](http://aurelia.io/hub.html). If you would like to have deeper insight into our development process, please install the [ZenHub](https://zenhub.io) Chrome or Firefox Extension and visit any of our repository's boards.
+
+## Building The Code
+
+To build the code, follow these steps.
+
+1. Ensure that [NodeJS](http://nodejs.org/) is installed. This provides the platform on which the build tooling runs.
+2. From the project folder, execute the following command:
+
+  ```shell
+  npm install
+  ```
+3. Ensure that [Gulp](http://gulpjs.com/) is installed. If you need to install it, use the following command:
+
+  ```shell
+  npm install -g gulp
+  ```
+4. To build the code, you can now run:
+
+  ```shell
+  gulp build
+  ```
+5. You will find the compiled code in the `dist` folder, available in three module formats: AMD, CommonJS and ES6.
+
+6. See `gulpfile.js` for other tasks related to generating the docs and linting.
+
+## Running The Tests
+
+To run the unit tests, first ensure that you have followed the steps above in order to install all dependencies and successfully build the library. Once you have done that, proceed with these additional steps:
+
+1. Ensure that the [Karma](http://karma-runner.github.io/) CLI is installed. If you need to install it, use the following command:
+
+  ```shell
+  npm install -g karma-cli
+  ```
+2. Ensure that [jspm](http://jspm.io/) is installed. If you need to install it, use the following commnand:
+
+  ```shell
+  npm install -g jspm
+  ```
+3. Install the client-side dependencies with jspm:
+
+  ```shell
+  jspm install
+  ```
+
+4. You can now run the tests with this command:
+
+  ```shell
+  karma start
+  ```
+>>>>>>> fd691757b9eca7899ed3c48552d334c1af537d10
