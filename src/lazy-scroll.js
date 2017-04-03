@@ -173,7 +173,7 @@ export class AureliaLazyScroll{
             let viewFactory = this.viewCompiler.compile(
                 '<template>' + 
                     '<div class="aurelia-v-scroll-row" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + 
-                       this.callback() + 
+                       this.callback(this.virtualStorage[i]) + 
                     '</div>' + 
                 '</template>'
             );
