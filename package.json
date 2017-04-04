@@ -70,5 +70,12 @@
   },
   "dependencies": {
     "browser-sync": "^2.18.8"
-  }
+  },
+  "aurelia": {
+    "build": {
+      "resources": [
+        "aurelia-virtual-scroll/aurelia-virtual-scroll"
+      ]
+    }
+  }  
 }
