@@ -89,14 +89,19 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
 
         let initialTop = fixTop ? this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop : this.slotLineHeight * this.firstVisibleIndex;
 
-        if (this.useHeader && !fixTop) initialTop = +this.slotLineHeight;
+        if (this.useHeader && !fixTop) {
+            initialTop = +this.slotLineHeight;
+        }
 
         for (let i = 0; i < this.virtualStorage.length; i++) {
             this.virtualStorage[i].top = initialTop + this.slotLineHeight * i + 'px';
         }
 
         this.rowBuilder();
-        if (this.useHeader && !fixTop) this.headerBuilder();
+
+        if (this.useHeader && !fixTop) {
+            this.headerBuilder();
+        }
     }
 
     detectBreakPoints() {

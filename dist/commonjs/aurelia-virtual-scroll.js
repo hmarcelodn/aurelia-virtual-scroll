@@ -104,14 +104,19 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
 
         var initialTop = fixTop ? this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop : this.slotLineHeight * this.firstVisibleIndex;
 
-        if (this.useHeader && !fixTop) initialTop = +this.slotLineHeight;
+        if (this.useHeader && !fixTop) {
+            initialTop = +this.slotLineHeight;
+        }
 
         for (var i = 0; i < this.virtualStorage.length; i++) {
             this.virtualStorage[i].top = initialTop + this.slotLineHeight * i + 'px';
         }
 
         this.rowBuilder();
-        if (this.useHeader && !fixTop) this.headerBuilder();
+
+        if (this.useHeader && !fixTop) {
+            this.headerBuilder();
+        }
     };
 
     AureliaVirtualScroll.prototype.detectBreakPoints = function detectBreakPoints() {

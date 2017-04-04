@@ -126,14 +126,19 @@ export class AureliaVirtualScroll{
                          this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop :
                          (this.slotLineHeight * this.firstVisibleIndex);  
 
-        if(this.useHeader && !fixTop) initialTop =+ this.slotLineHeight;          
+        if(this.useHeader && !fixTop) {
+            initialTop =+ this.slotLineHeight;
+        }          
 
         for(let i = 0; i < this.virtualStorage.length; i++) {
             this.virtualStorage[i].top = (initialTop + (this.slotLineHeight * i))  + 'px';            
         }                        
         
         this.rowBuilder();
-        if(this.useHeader && !fixTop) this.headerBuilder();
+        
+        if(this.useHeader && !fixTop) {
+            this.headerBuilder();
+        }
     }  
 
     detectBreakPoints(){
