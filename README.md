@@ -4,6 +4,12 @@
 
 **aurelia-virtual-scroller** allows to virtualize a list without losing you observer model context. It will help to reduce significantly the render time from the browser from lineal to constant time. It its mobile friendly (the reason it was created for) and with some configurations that allows to use this plugin in a responsive design application. Its open source and everybody can collaborate with its code base to improve and have a better plugin.
 
+
+**Demo**
+
+[http://aurelia-virtual-scroll-site.azurewebsites.net](http://aurelia-virtual-scroll-site.azurewebsites.net "Demo Azure Site")
+
+
 **Installation**
 
     npm install aurelia-virtual-scroller --save
