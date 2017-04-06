@@ -5,13 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.AureliaVirtualScroll = undefined;
 
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _class;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _class;
 
 var _aureliaFramework = require('aurelia-framework');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFramework.bindable)('fetcher'), _dec2 = (0, _aureliaFramework.bindable)({ name: 'storage', defaultValue: [], defaultBindingMode: _aureliaFramework.bindingMode.twoWay }), _dec3 = (0, _aureliaFramework.bindable)({ name: 'slotHeight', defaultValue: 400, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec4 = (0, _aureliaFramework.bindable)({ name: 'slotLineHeight', defaultValue: 20, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec5 = (0, _aureliaFramework.bindable)({ name: 'debug', defaultValue: false, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec6 = (0, _aureliaFramework.bindable)({ name: 'windowScroller', defaultValue: true, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec7 = (0, _aureliaFramework.bindable)({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec8 = (0, _aureliaFramework.bindable)({ name: 'callback', defaultValue: undefined, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec9 = (0, _aureliaFramework.bindable)({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec10 = (0, _aureliaFramework.bindable)({ name: 'breakpoints', defaultValue: [], defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec11 = (0, _aureliaFramework.noView)(), _dec12 = (0, _aureliaFramework.customAttribute)("v-scroll"), _dec13 = (0, _aureliaFramework.inject)(Element, _aureliaFramework.BindingEngine, _aureliaFramework.TaskQueue, _aureliaFramework.ViewCompiler, _aureliaFramework.ViewResources, _aureliaFramework.Container), _dec(_class = _dec2(_class = _dec3(_class = _dec4(_class = _dec5(_class = _dec6(_class = _dec7(_class = _dec8(_class = _dec9(_class = _dec10(_class = _dec11(_class = _dec12(_class = _dec13(_class = function () {
+var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFramework.bindable)('fetcher'), _dec2 = (0, _aureliaFramework.bindable)({ name: 'storage', defaultValue: [], defaultBindingMode: _aureliaFramework.bindingMode.twoWay }), _dec3 = (0, _aureliaFramework.bindable)({ name: 'slotHeight', defaultValue: 400, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec4 = (0, _aureliaFramework.bindable)({ name: 'slotLineHeight', defaultValue: 20, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec5 = (0, _aureliaFramework.bindable)({ name: 'debug', defaultValue: false, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec6 = (0, _aureliaFramework.bindable)({ name: 'windowScroller', defaultValue: true, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec7 = (0, _aureliaFramework.bindable)({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec8 = (0, _aureliaFramework.bindable)({ name: 'callback', defaultValue: undefined, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec9 = (0, _aureliaFramework.bindable)({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec10 = (0, _aureliaFramework.bindable)({ name: 'breakpoints', defaultValue: [], defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec11 = (0, _aureliaFramework.bindable)({ name: 'enableFetchMode', defaultValue: false, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec12 = (0, _aureliaFramework.bindable)({ name: 'fetchBuffer', defaultValue: 1, defaultBindingMode: _aureliaFramework.bindingMode.oneWay }), _dec13 = (0, _aureliaFramework.noView)(), _dec14 = (0, _aureliaFramework.customAttribute)("v-scroll"), _dec15 = (0, _aureliaFramework.inject)(Element, _aureliaFramework.BindingEngine, _aureliaFramework.TaskQueue, _aureliaFramework.ViewCompiler, _aureliaFramework.ViewResources, _aureliaFramework.Container), _dec(_class = _dec2(_class = _dec3(_class = _dec4(_class = _dec5(_class = _dec6(_class = _dec7(_class = _dec8(_class = _dec9(_class = _dec10(_class = _dec11(_class = _dec12(_class = _dec13(_class = _dec14(_class = _dec15(_class = function () {
     function AureliaVirtualScroll(element, bindingEngine, taskQueue, viewCompiler, viewResources, container) {
         _classCallCheck(this, AureliaVirtualScroll);
 
@@ -117,6 +117,14 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
         if (this.useHeader && !fixTop) {
             this.headerBuilder();
         }
+
+        if (this.enableFetchMode) {
+            var fetchBuffer = this.storage.length - this.fetchBuffer;
+
+            if (this.lastVisibleIndex >= fetchBuffer) {
+                this.fetchData();
+            }
+        }
     };
 
     AureliaVirtualScroll.prototype.detectBreakPoints = function detectBreakPoints() {
@@ -138,13 +146,24 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
     };
 
     AureliaVirtualScroll.prototype.resizeViewPortContainer = function resizeViewPortContainer() {
-        this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+        if (this.windowScroller) {
+            this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+        } else {
+            this.element.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+        }
     };
 
     AureliaVirtualScroll.prototype.fetchData = function fetchData() {
         var _this2 = this;
 
-        this.fetcher().then(function (data) {
+        var scrollContext = {
+            firstItem: this.virtualStorage[0],
+            lastItem: this.virtualStorage[this.virtualStorage.length - 1],
+            firstVisibleIndex: this.firstVisibleIndex,
+            lastVisibleIndex: this.lastVisibleIndex
+        };
+
+        this.fetcher(scrollContext).then(function (data) {
             for (var i = 0; i < data.length; i++) {
                 _this2.storage.push(data[i]);
             }
@@ -180,4 +199,4 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
     };
 
     return AureliaVirtualScroll;
-}()) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class);
+}()) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class);
