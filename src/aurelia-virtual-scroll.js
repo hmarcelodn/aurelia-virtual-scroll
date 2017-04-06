@@ -23,6 +23,8 @@ import {
 @bindable({ name: 'callback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay })
 @bindable({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay })
 @bindable({ name: 'breakpoints', defaultValue: [], defaultBindingMode: bindingMode.oneWay })
+@bindable({ name: 'enableFetchMode', defaultValue: false, defaultBindingMode: bindingMode.oneWay })
+@bindable({ name: 'fetchBuffer', defaultValue: 1, defaultBindingMode: bindingMode.oneWay })
 
 @noView()
 @customAttribute("v-scroll")
@@ -139,6 +141,14 @@ export class AureliaVirtualScroll{
         if(this.useHeader && !fixTop) {
             this.headerBuilder();
         }
+
+        if(this.enableFetchMode){
+            let fetchBuffer = this.storage.length - this.fetchBuffer;
+
+            if(this.lastVisibleIndex >= fetchBuffer){
+                this.fetchData();
+            }
+        }
     }  
 
     detectBreakPoints(){
@@ -164,11 +174,23 @@ export class AureliaVirtualScroll{
     }
 
     resizeViewPortContainer(){
-        this.viewportContainer.style.height = (((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) + 'px';
+        if(this.windowScroller){
+            this.viewportContainer.style.height = (((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) + 'px';
+        }
+        else{
+            this.element.style.height = (((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) + 'px';
+        }      
     }
 
     fetchData(){
-        this.fetcher().then((data) => {
+        let scrollContext = {
+            firstItem: this.virtualStorage[0],
+            lastItem: this.virtualStorage[this.virtualStorage.length - 1],
+            firstVisibleIndex: this.firstVisibleIndex,
+            lastVisibleIndex: this.lastVisibleIndex
+        };
+
+        this.fetcher(scrollContext).then((data) => {
             for(let i = 0; i < data.length; i++){                        
                 this.storage.push(data[i]);   
             }
@@ -215,5 +237,4 @@ export class AureliaVirtualScroll{
         view.bind(this.virtualStorage[0], createOverrideContext(this.virtualStorage[0]));
         view.attached();        
     }
-
 }
