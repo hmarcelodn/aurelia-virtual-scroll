@@ -3,7 +3,7 @@
 System.register(['aurelia-framework'], function (_export, _context) {
     "use strict";
 
-    var inject, noView, bindable, bindingMode, customAttribute, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container, ViewSlot, createOverrideContext, _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _class, AureliaVirtualScroll;
+    var inject, noView, bindable, bindingMode, customAttribute, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container, ViewSlot, createOverrideContext, _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _dec16, _class, AureliaVirtualScroll;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -27,7 +27,7 @@ System.register(['aurelia-framework'], function (_export, _context) {
             createOverrideContext = _aureliaFramework.createOverrideContext;
         }],
         execute: function () {
-            _export('AureliaVirtualScroll', AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable({ name: 'storage', defaultValue: [], defaultBindingMode: bindingMode.twoWay }), _dec3 = bindable({ name: 'slotHeight', defaultValue: 400, defaultBindingMode: bindingMode.oneWay }), _dec4 = bindable({ name: 'slotLineHeight', defaultValue: 20, defaultBindingMode: bindingMode.oneWay }), _dec5 = bindable({ name: 'debug', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec6 = bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay }), _dec7 = bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec8 = bindable({ name: 'callback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec9 = bindable({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec10 = bindable({ name: 'breakpoints', defaultValue: [], defaultBindingMode: bindingMode.oneWay }), _dec11 = bindable({ name: 'enableFetchMode', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec12 = bindable({ name: 'fetchBuffer', defaultValue: 1, defaultBindingMode: bindingMode.oneWay }), _dec13 = noView(), _dec14 = customAttribute("v-scroll"), _dec15 = inject(Element, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container), _dec(_class = _dec2(_class = _dec3(_class = _dec4(_class = _dec5(_class = _dec6(_class = _dec7(_class = _dec8(_class = _dec9(_class = _dec10(_class = _dec11(_class = _dec12(_class = _dec13(_class = _dec14(_class = _dec15(_class = function () {
+            _export('AureliaVirtualScroll', AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable({ name: 'storage', defaultValue: [], defaultBindingMode: bindingMode.twoWay }), _dec3 = bindable({ name: 'slotHeight', defaultValue: 400, defaultBindingMode: bindingMode.oneWay }), _dec4 = bindable({ name: 'slotLineHeight', defaultValue: 20, defaultBindingMode: bindingMode.oneWay }), _dec5 = bindable({ name: 'debug', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec6 = bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay }), _dec7 = bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec8 = bindable({ name: 'callback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec9 = bindable({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec10 = bindable({ name: 'breakpoints', defaultValue: [], defaultBindingMode: bindingMode.oneWay }), _dec11 = bindable({ name: 'enableFetchMode', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec12 = bindable({ name: 'fetchBuffer', defaultValue: 1, defaultBindingMode: bindingMode.oneWay }), _dec13 = bindable({ name: 'arrayPollingMode', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec14 = noView(), _dec15 = customAttribute("v-scroll"), _dec16 = inject(Element, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container), _dec(_class = _dec2(_class = _dec3(_class = _dec4(_class = _dec5(_class = _dec6(_class = _dec7(_class = _dec8(_class = _dec9(_class = _dec10(_class = _dec11(_class = _dec12(_class = _dec13(_class = _dec14(_class = _dec15(_class = _dec16(_class = function () {
                 function AureliaVirtualScroll(element, bindingEngine, taskQueue, viewCompiler, viewResources, container) {
                     _classCallCheck(this, AureliaVirtualScroll);
 
@@ -55,12 +55,16 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     this.viewSlot;
 
                     this.currentBreakPoint;
+
+                    this.lastPollingArrayCount;
                 }
 
                 AureliaVirtualScroll.prototype.attached = function attached() {
                     var _this = this;
 
-                    if (this.headerCallback !== undefined && typeof this.headerCallback === "function") this.useHeader = true;
+                    if (this.headerCallback !== undefined && typeof this.headerCallback === "function") {
+                        this.useHeader = true;
+                    }
 
                     this.viewSlot = new ViewSlot(this.element, true);
                     this.viewportContainer = document.getElementsByClassName(this.viewportElement)[0];
@@ -68,12 +72,17 @@ System.register(['aurelia-framework'], function (_export, _context) {
 
                     if (this.windowScroller) {
                         this.scrollContainer = window;
+
                         this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
                         this.slotHeight = window.innerHeight;
 
+                        console.log((this.storage.length - 1) * this.slotLineHeight);
+                        console.log(this.viewportContainer.offsetTop);
+                        console.log(this.viewportContainer.style.height);
+
                         window.addEventListener('scroll', function () {
                             if (window.scrollY > _this.viewportContainer.offsetTop) {
-                                _this.computeDimensions(true);
+                                _this.computeDimensions(false);
                             } else if (window.scrollY - _this.lastScrollPosition < 0 && window.scrollY <= _this.viewportContainer.offsetTop) {
                                 _this.computeDimensions(false);
                             }
@@ -97,6 +106,17 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     this.taskQueue.queueTask(function () {
                         _this.computeDimensions(false);
                     });
+
+                    if (this.arrayPollingMode) {
+                        this.lastPollingArrayCount = this.storage.length;
+                        window.setInterval(function () {
+
+                            if (_this.lastPollingArrayCount != _this.storage.length) {
+                                _this.lastPollingArrayCount = _this.storage.length;
+                                _this.resizeViewPortContainer();
+                            }
+                        }, 200);
+                    }
                 };
 
                 AureliaVirtualScroll.prototype.computeDimensions = function computeDimensions() {
@@ -110,7 +130,11 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     this.firstVisibleIndex = Math.ceil(this.scrollY / this.slotLineHeight);
                     this.lastVisibleIndex = this.numItemsPerPage + this.firstVisibleIndex;
 
-                    this.firstVisibleIndex = this.firstVisibleIndex !== 0 ? this.firstVisibleIndex - 1 : this.firstVisibleIndex;
+                    console.clear();
+                    console.log(this.firstVisibleIndex);
+
+                    this.firstVisibleIndex = this.firstVisibleIndex > 3 ? this.firstVisibleIndex - 3 : 0;
+
                     this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 2;
 
                     console.log('firstVisibleIdex:' + this.firstVisibleIndex);
@@ -163,9 +187,17 @@ System.register(['aurelia-framework'], function (_export, _context) {
 
                 AureliaVirtualScroll.prototype.resizeViewPortContainer = function resizeViewPortContainer() {
                     if (this.windowScroller) {
-                        this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+                        if (this.viewportContainer !== undefined) {
+                            var newHeight = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop;
+                            this.viewportContainer.style.height = newHeight < 0 ? 0 + 'px' : newHeight + 'px';
+                            this.computeDimensions();
+                        }
                     } else {
-                        this.element.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+                        if (this.element.style.height !== "") {
+                            var _newHeight = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop;
+                            this.element.style.height = _newHeight < 0 ? 0 + 'px' : _newHeight + 'px';
+                            this.computeDimensions();
+                        }
                     }
                 };
 
@@ -185,7 +217,6 @@ System.register(['aurelia-framework'], function (_export, _context) {
                         }
 
                         _this2.resizeViewPortContainer();
-                        _this2.computeDimensions();
                     });
                 };
 
@@ -214,8 +245,12 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     view.attached();
                 };
 
+                AureliaVirtualScroll.prototype.storageChanged = function storageChanged(splices) {
+                    this.resizeViewPortContainer();
+                };
+
                 return AureliaVirtualScroll;
-            }()) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class));
+            }()) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class));
 
             _export('AureliaVirtualScroll', AureliaVirtualScroll);
         }

@@ -1,8 +1,8 @@
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _class;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _dec11, _dec12, _dec13, _dec14, _dec15, _dec16, _class;
 
 import { inject, noView, bindable, bindingMode, customAttribute, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container, ViewSlot, createOverrideContext } from 'aurelia-framework';
 
-export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable({ name: 'storage', defaultValue: [], defaultBindingMode: bindingMode.twoWay }), _dec3 = bindable({ name: 'slotHeight', defaultValue: 400, defaultBindingMode: bindingMode.oneWay }), _dec4 = bindable({ name: 'slotLineHeight', defaultValue: 20, defaultBindingMode: bindingMode.oneWay }), _dec5 = bindable({ name: 'debug', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec6 = bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay }), _dec7 = bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec8 = bindable({ name: 'callback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec9 = bindable({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec10 = bindable({ name: 'breakpoints', defaultValue: [], defaultBindingMode: bindingMode.oneWay }), _dec11 = bindable({ name: 'enableFetchMode', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec12 = bindable({ name: 'fetchBuffer', defaultValue: 1, defaultBindingMode: bindingMode.oneWay }), _dec13 = noView(), _dec14 = customAttribute("v-scroll"), _dec15 = inject(Element, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container), _dec(_class = _dec2(_class = _dec3(_class = _dec4(_class = _dec5(_class = _dec6(_class = _dec7(_class = _dec8(_class = _dec9(_class = _dec10(_class = _dec11(_class = _dec12(_class = _dec13(_class = _dec14(_class = _dec15(_class = class AureliaVirtualScroll {
+export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable({ name: 'storage', defaultValue: [], defaultBindingMode: bindingMode.twoWay }), _dec3 = bindable({ name: 'slotHeight', defaultValue: 400, defaultBindingMode: bindingMode.oneWay }), _dec4 = bindable({ name: 'slotLineHeight', defaultValue: 20, defaultBindingMode: bindingMode.oneWay }), _dec5 = bindable({ name: 'debug', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec6 = bindable({ name: 'windowScroller', defaultValue: true, defaultBindingMode: bindingMode.oneWay }), _dec7 = bindable({ name: 'viewportElement', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec8 = bindable({ name: 'callback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec9 = bindable({ name: 'headerCallback', defaultValue: undefined, defaultBindingMode: bindingMode.oneWay }), _dec10 = bindable({ name: 'breakpoints', defaultValue: [], defaultBindingMode: bindingMode.oneWay }), _dec11 = bindable({ name: 'enableFetchMode', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec12 = bindable({ name: 'fetchBuffer', defaultValue: 1, defaultBindingMode: bindingMode.oneWay }), _dec13 = bindable({ name: 'arrayPollingMode', defaultValue: false, defaultBindingMode: bindingMode.oneWay }), _dec14 = noView(), _dec15 = customAttribute("v-scroll"), _dec16 = inject(Element, BindingEngine, TaskQueue, ViewCompiler, ViewResources, Container), _dec(_class = _dec2(_class = _dec3(_class = _dec4(_class = _dec5(_class = _dec6(_class = _dec7(_class = _dec8(_class = _dec9(_class = _dec10(_class = _dec11(_class = _dec12(_class = _dec13(_class = _dec14(_class = _dec15(_class = _dec16(_class = class AureliaVirtualScroll {
     constructor(element, bindingEngine, taskQueue, viewCompiler, viewResources, container) {
         this.element = element;
         this.viewCompiler = viewCompiler;
@@ -28,10 +28,15 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         this.viewSlot;
 
         this.currentBreakPoint;
+
+        this.lastPollingArrayCount;
     }
 
     attached() {
-        if (this.headerCallback !== undefined && typeof this.headerCallback === "function") this.useHeader = true;
+
+        if (this.headerCallback !== undefined && typeof this.headerCallback === "function") {
+            this.useHeader = true;
+        }
 
         this.viewSlot = new ViewSlot(this.element, true);
         this.viewportContainer = document.getElementsByClassName(this.viewportElement)[0];
@@ -39,12 +44,17 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
 
         if (this.windowScroller) {
             this.scrollContainer = window;
+
             this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
             this.slotHeight = window.innerHeight;
 
+            console.log((this.storage.length - 1) * this.slotLineHeight);
+            console.log(this.viewportContainer.offsetTop);
+            console.log(this.viewportContainer.style.height);
+
             window.addEventListener('scroll', () => {
                 if (window.scrollY > this.viewportContainer.offsetTop) {
-                    this.computeDimensions(true);
+                    this.computeDimensions(false);
                 } else if (window.scrollY - this.lastScrollPosition < 0 && window.scrollY <= this.viewportContainer.offsetTop) {
                     this.computeDimensions(false);
                 }
@@ -68,6 +78,17 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         this.taskQueue.queueTask(() => {
             this.computeDimensions(false);
         });
+
+        if (this.arrayPollingMode) {
+            this.lastPollingArrayCount = this.storage.length;
+            window.setInterval(() => {
+
+                if (this.lastPollingArrayCount != this.storage.length) {
+                    this.lastPollingArrayCount = this.storage.length;
+                    this.resizeViewPortContainer();
+                }
+            }, 200);
+        }
     }
 
     computeDimensions(fixTop = false) {
@@ -79,7 +100,11 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         this.firstVisibleIndex = Math.ceil(this.scrollY / this.slotLineHeight);
         this.lastVisibleIndex = this.numItemsPerPage + this.firstVisibleIndex;
 
-        this.firstVisibleIndex = this.firstVisibleIndex !== 0 ? this.firstVisibleIndex - 1 : this.firstVisibleIndex;
+        console.clear();
+        console.log(this.firstVisibleIndex);
+
+        this.firstVisibleIndex = this.firstVisibleIndex > 3 ? this.firstVisibleIndex - 3 : 0;
+
         this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 2;
 
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
@@ -132,9 +157,17 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
 
     resizeViewPortContainer() {
         if (this.windowScroller) {
-            this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+            if (this.viewportContainer !== undefined) {
+                let newHeight = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop;
+                this.viewportContainer.style.height = newHeight < 0 ? 0 + 'px' : newHeight + 'px';
+                this.computeDimensions();
+            }
         } else {
-            this.element.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+            if (this.element.style.height !== "") {
+                let newHeight = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop;
+                this.element.style.height = newHeight < 0 ? 0 + 'px' : newHeight + 'px';
+                this.computeDimensions();
+            }
         }
     }
 
@@ -152,7 +185,6 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
             }
 
             this.resizeViewPortContainer();
-            this.computeDimensions();
         });
     }
 
@@ -180,4 +212,9 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         view.bind(this.virtualStorage[0], createOverrideContext(this.virtualStorage[0]));
         view.attached();
     }
-}) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class);
+
+    storageChanged(splices) {
+        this.resizeViewPortContainer();
+    }
+
+}) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class) || _class);
