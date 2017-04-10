@@ -66,6 +66,11 @@ export class AureliaVirtualScroll{
         this.lastPollingArrayCount;
     }
 
+    // Binding Parent ViewModel
+    bind(bindingContext){
+        this.bindingContext = bindingContext;
+    }
+
     attached() {
 
         if(this.headerCallback !== undefined && typeof this.headerCallback === "function"){
@@ -158,7 +163,7 @@ export class AureliaVirtualScroll{
             this.lastVisibleIndex = this.storage.length;
         }
 
-        console.clear();
+        //console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
         console.log('lastVisibleIdex:' + this.lastVisibleIndex);
           
@@ -268,7 +273,7 @@ export class AureliaVirtualScroll{
             let view = viewFactory.create(this.element);  
 
             this.viewSlot.add(view);        
-            view.bind(this.virtualStorage[i], createOverrideContext(this.virtualStorage[i]));
+            view.bind(this.bindingContext, createOverrideContext(this.virtualStorage[i]));
             view.attached();
         }
 
@@ -287,7 +292,7 @@ export class AureliaVirtualScroll{
         let view = viewFactory.create(this.element);  
 
         this.viewSlot.insert(0,view);        
-        view.bind(this.virtualStorage[0], createOverrideContext(this.virtualStorage[0]));
+        view.bind(this.bindingContext, createOverrideContext(this.virtualStorage[0]));
         view.attached();        
     }
 

@@ -32,6 +32,10 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         this.lastPollingArrayCount;
     }
 
+    bind(bindingContext) {
+        this.bindingContext = bindingContext;
+    }
+
     attached() {
 
         if (this.headerCallback !== undefined && typeof this.headerCallback === "function") {
@@ -113,7 +117,6 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
             this.lastVisibleIndex = this.storage.length;
         }
 
-        console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
         console.log('lastVisibleIdex:' + this.lastVisibleIndex);
 
@@ -204,7 +207,7 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
             let view = viewFactory.create(this.element);
 
             this.viewSlot.add(view);
-            view.bind(this.virtualStorage[i], createOverrideContext(this.virtualStorage[i]));
+            view.bind(this.bindingContext, createOverrideContext(this.virtualStorage[i]));
             view.attached();
         }
     }
@@ -216,7 +219,7 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         let view = viewFactory.create(this.element);
 
         this.viewSlot.insert(0, view);
-        view.bind(this.virtualStorage[0], createOverrideContext(this.virtualStorage[0]));
+        view.bind(this.bindingContext, createOverrideContext(this.virtualStorage[0]));
         view.attached();
     }
 

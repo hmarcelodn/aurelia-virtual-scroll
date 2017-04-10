@@ -43,6 +43,10 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
         this.lastPollingArrayCount;
     }
 
+    AureliaVirtualScroll.prototype.bind = function bind(bindingContext) {
+        this.bindingContext = bindingContext;
+    };
+
     AureliaVirtualScroll.prototype.attached = function attached() {
         var _this = this;
 
@@ -127,7 +131,6 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
             this.lastVisibleIndex = this.storage.length;
         }
 
-        console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
         console.log('lastVisibleIdex:' + this.lastVisibleIndex);
 
@@ -220,7 +223,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
             var view = viewFactory.create(this.element);
 
             this.viewSlot.add(view);
-            view.bind(this.virtualStorage[i], (0, _aureliaFramework.createOverrideContext)(this.virtualStorage[i]));
+            view.bind(this.bindingContext, (0, _aureliaFramework.createOverrideContext)(this.virtualStorage[i]));
             view.attached();
         }
     };
@@ -232,7 +235,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
         var view = viewFactory.create(this.element);
 
         this.viewSlot.insert(0, view);
-        view.bind(this.virtualStorage[0], (0, _aureliaFramework.createOverrideContext)(this.virtualStorage[0]));
+        view.bind(this.bindingContext, (0, _aureliaFramework.createOverrideContext)(this.virtualStorage[0]));
         view.attached();
     };
 

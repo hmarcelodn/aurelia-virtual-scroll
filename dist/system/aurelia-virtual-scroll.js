@@ -59,6 +59,10 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     this.lastPollingArrayCount;
                 }
 
+                AureliaVirtualScroll.prototype.bind = function bind(bindingContext) {
+                    this.bindingContext = bindingContext;
+                };
+
                 AureliaVirtualScroll.prototype.attached = function attached() {
                     var _this = this;
 
@@ -143,7 +147,6 @@ System.register(['aurelia-framework'], function (_export, _context) {
                         this.lastVisibleIndex = this.storage.length;
                     }
 
-                    console.clear();
                     console.log('firstVisibleIdex:' + this.firstVisibleIndex);
                     console.log('lastVisibleIdex:' + this.lastVisibleIndex);
 
@@ -236,7 +239,7 @@ System.register(['aurelia-framework'], function (_export, _context) {
                         var view = viewFactory.create(this.element);
 
                         this.viewSlot.add(view);
-                        view.bind(this.virtualStorage[i], createOverrideContext(this.virtualStorage[i]));
+                        view.bind(this.bindingContext, createOverrideContext(this.virtualStorage[i]));
                         view.attached();
                     }
                 };
@@ -248,7 +251,7 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     var view = viewFactory.create(this.element);
 
                     this.viewSlot.insert(0, view);
-                    view.bind(this.virtualStorage[0], createOverrideContext(this.virtualStorage[0]));
+                    view.bind(this.bindingContext, createOverrideContext(this.virtualStorage[0]));
                     view.attached();
                 };
 
