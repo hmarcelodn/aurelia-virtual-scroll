@@ -138,7 +138,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
 
         var initialTop = fixTop ? this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop : this.slotLineHeight * this.firstVisibleIndex;
 
-        if (this.useHeader && !fixTop) {
+        if (this.useHeader && !this.firstVisibleIndex) {
             initialTop = +this.slotLineHeight;
         }
 
@@ -148,7 +148,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
 
         this.rowBuilder();
 
-        if (this.useHeader && !fixTop) {
+        if (this.useHeader && !this.firstVisibleIndex) {
             this.headerBuilder();
         }
 

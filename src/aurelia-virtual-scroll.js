@@ -133,7 +133,7 @@ export class AureliaVirtualScroll{
     }
 
     computeDimensions(fixTop = false) {
-        
+
         this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
 
         // Window Scroll Considering Content Above
@@ -173,7 +173,7 @@ export class AureliaVirtualScroll{
                          this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop :
                          (this.slotLineHeight * this.firstVisibleIndex);  
 
-        if(this.useHeader && !fixTop) {
+        if(this.useHeader && !this.firstVisibleIndex) {
             initialTop =+ this.slotLineHeight;
         }          
 
@@ -181,16 +181,13 @@ export class AureliaVirtualScroll{
             this.virtualStorage[i].top = (initialTop + (this.slotLineHeight * i))  + 'px';            
         }                        
         
-
         // Row rowBuilder
         this.rowBuilder();
         
-
         // Using Headers
-        if(this.useHeader && !fixTop) {
+        if(this.useHeader && !this.firstVisibleIndex) {
             this.headerBuilder();
         }
-
 
         // Fetch Mode
         if(this.enableFetchMode){

@@ -141,7 +141,7 @@ define(['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
 
             var initialTop = fixTop ? this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop : this.slotLineHeight * this.firstVisibleIndex;
 
-            if (this.useHeader && !fixTop) {
+            if (this.useHeader && !this.firstVisibleIndex) {
                 initialTop = +this.slotLineHeight;
             }
 
@@ -151,7 +151,7 @@ define(['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
 
             this.rowBuilder();
 
-            if (this.useHeader && !fixTop) {
+            if (this.useHeader && !this.firstVisibleIndex) {
                 this.headerBuilder();
             }
 
