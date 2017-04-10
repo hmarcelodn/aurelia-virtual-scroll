@@ -76,10 +76,6 @@ System.register(['aurelia-framework'], function (_export, _context) {
                         this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
                         this.slotHeight = window.innerHeight;
 
-                        console.log((this.storage.length - 1) * this.slotLineHeight);
-                        console.log(this.viewportContainer.offsetTop);
-                        console.log(this.viewportContainer.style.height);
-
                         window.addEventListener('scroll', function () {
                             if (window.scrollY > _this.viewportContainer.offsetTop) {
                                 _this.computeDimensions(false);
@@ -105,6 +101,7 @@ System.register(['aurelia-framework'], function (_export, _context) {
 
                     this.taskQueue.queueTask(function () {
                         _this.computeDimensions(false);
+                        _this.detectBreakPoints();
                     });
 
                     if (this.arrayPollingMode) {
@@ -122,7 +119,15 @@ System.register(['aurelia-framework'], function (_export, _context) {
                 AureliaVirtualScroll.prototype.computeDimensions = function computeDimensions() {
                     var fixTop = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
+
                     this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
+
+                    if (this.windowScroller) {
+                        if (this.scrollY >= this.viewportContainer.offsetTop) {
+                            this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
+                        }
+                    }
+
                     this.scrollHeight = this.scrollContainer.scrollHeight;
 
                     this.numItemsPerPage = Math.max(Math.ceil(this.slotHeight / this.slotLineHeight), 0);
@@ -130,13 +135,15 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     this.firstVisibleIndex = Math.ceil(this.scrollY / this.slotLineHeight);
                     this.lastVisibleIndex = this.numItemsPerPage + this.firstVisibleIndex;
 
-                    console.clear();
-                    console.log(this.firstVisibleIndex);
-
                     this.firstVisibleIndex = this.firstVisibleIndex > 3 ? this.firstVisibleIndex - 3 : 0;
 
                     this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 2;
 
+                    if (this.lastVisibleIndex > this.storage.length) {
+                        this.lastVisibleIndex = this.storage.length;
+                    }
+
+                    console.clear();
                     console.log('firstVisibleIdex:' + this.firstVisibleIndex);
                     console.log('lastVisibleIdex:' + this.lastVisibleIndex);
 

@@ -82,10 +82,6 @@ export class AureliaVirtualScroll{
             this.viewportContainer.style.height = (((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) + 'px';
             this.slotHeight = window.innerHeight;
 
-            console.log(((this.storage.length - 1) * this.slotLineHeight));
-            console.log(this.viewportContainer.offsetTop);
-            console.log(this.viewportContainer.style.height);
-
             // Its buggy. It needs a timer for avoid multiple firing.
             window.addEventListener('scroll', () => {              
                 if (window.scrollY > this.viewportContainer.offsetTop) {
@@ -95,7 +91,7 @@ export class AureliaVirtualScroll{
                 }
 
                 this.lastScrollPosition = window.scrollY;                
-            });            
+            });          
         } 
         else {
             this.viewportContainer.style.height = this.slotHeight + 'px';            
@@ -113,8 +109,9 @@ export class AureliaVirtualScroll{
         // Responsive Design
         window.addEventListener('resize', this.detectBreakPoints.bind(this));
 
-        this.taskQueue.queueTask(() => {            
-            this.computeDimensions(false);         
+        this.taskQueue.queueTask(() => {                      
+            this.computeDimensions(false);      
+            this.detectBreakPoints();                 
         }); 
 
         if(this.arrayPollingMode){
@@ -131,16 +128,22 @@ export class AureliaVirtualScroll{
     }
 
     computeDimensions(fixTop = false) {
+        
         this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
+
+        // Window Scroll Considering Content Above
+        if(this.windowScroller){
+            if(this.scrollY >= this.viewportContainer.offsetTop){
+                this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
+            }
+        }
+
         this.scrollHeight = this.scrollContainer.scrollHeight;        
 
         this.numItemsPerPage = Math.max(Math.ceil(this.slotHeight / this.slotLineHeight), 0);
 
         this.firstVisibleIndex = Math.ceil((this.scrollY) / this.slotLineHeight);      
-        this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);     
-        
-        console.clear();
-        console.log(this.firstVisibleIndex);
+        this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);             
 
         this.firstVisibleIndex = this.firstVisibleIndex > 3 ? 
                                  this.firstVisibleIndex - 3 : 
@@ -150,8 +153,12 @@ export class AureliaVirtualScroll{
                                 this.lastVisibleIndex : 
                                 this.lastVisibleIndex + 2;      
 
-        //console.clear();
+        // If Overflow exceeds the max storage length assign storage length as last item to be shown.
+        if(this.lastVisibleIndex > this.storage.length){
+            this.lastVisibleIndex = this.storage.length;
+        }
 
+        console.clear();
         console.log('firstVisibleIdex:' + this.firstVisibleIndex);
         console.log('lastVisibleIdex:' + this.lastVisibleIndex);
           
