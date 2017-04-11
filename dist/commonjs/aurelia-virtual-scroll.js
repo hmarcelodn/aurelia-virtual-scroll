@@ -221,7 +221,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
         this.viewSlot.removeAll(true, true);
 
         for (var i = 0; i < this.virtualStorage.length; i++) {
-            var viewFactory = this.viewCompiler.compile('<template>' + '<div class="aurelia-virtual-scroll-row" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + this.callback(this.virtualStorage[i]) + '</div>' + '</template>');
+            var viewFactory = this.viewCompiler.compile('<template>' + '<div class="aurelia-virtual-scroll-row" style="height: ' + this.slotLineHeight + 'px; border: 1px solid; position: absolute; left: 0px; top: ' + this.virtualStorage[i].top + '; width: 100%">' + this.callback(this.virtualStorage[i], this.firstVisibleIndex + i, this.firstVisibleIndex, this.lastVisibleIndex) + '</div>' + '</template>');
 
             var view = viewFactory.create(this.element);
 
