@@ -61,7 +61,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
         if (this.windowScroller) {
             this.scrollContainer = window;
 
-            this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
+            this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight + this.viewportContainer.offsetTop;
             this.slotHeight = window.innerHeight;
 
             window.addEventListener('scroll', function () {
@@ -182,7 +182,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
     AureliaVirtualScroll.prototype.resizeViewPortContainer = function resizeViewPortContainer() {
         if (this.windowScroller) {
             if (this.viewportContainer !== undefined) {
-                var newHeight = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop;
+                var newHeight = (this.storage.length - 1) * this.slotLineHeight + this.viewportContainer.offsetTop;
                 this.viewportContainer.style.height = newHeight < 0 ? 0 + 'px' : newHeight + 'px';
                 this.computeDimensions();
             }
