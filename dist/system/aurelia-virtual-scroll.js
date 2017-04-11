@@ -154,7 +154,7 @@ System.register(['aurelia-framework'], function (_export, _context) {
 
                     var initialTop = fixTop ? this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop : this.slotLineHeight * this.firstVisibleIndex;
 
-                    if (this.useHeader && !fixTop) {
+                    if (this.useHeader && !this.firstVisibleIndex) {
                         initialTop = +this.slotLineHeight;
                     }
 
@@ -164,7 +164,7 @@ System.register(['aurelia-framework'], function (_export, _context) {
 
                     this.rowBuilder();
 
-                    if (this.useHeader && !fixTop) {
+                    if (this.useHeader && !this.firstVisibleIndex) {
                         this.headerBuilder();
                     }
 

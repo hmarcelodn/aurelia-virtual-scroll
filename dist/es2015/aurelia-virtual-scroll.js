@@ -124,7 +124,7 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
 
         let initialTop = fixTop ? this.slotLineHeight * (this.firstVisibleIndex - 1) - this.viewportContainer.offsetTop : this.slotLineHeight * this.firstVisibleIndex;
 
-        if (this.useHeader && !fixTop) {
+        if (this.useHeader && !this.firstVisibleIndex) {
             initialTop = +this.slotLineHeight;
         }
 
@@ -134,7 +134,7 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
 
         this.rowBuilder();
 
-        if (this.useHeader && !fixTop) {
+        if (this.useHeader && !this.firstVisibleIndex) {
             this.headerBuilder();
         }
 
