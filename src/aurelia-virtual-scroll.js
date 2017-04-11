@@ -139,9 +139,9 @@ export class AureliaVirtualScroll{
 
         // Window Scroll Considering Content Above
         if(this.windowScroller){
-            if(this.scrollY >= this.viewportContainer.offsetTop){
+            //if(this.scrollY >= this.viewportContainer.offsetTop){
                 this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
-            }
+            //}
         }
 
         this.scrollHeight = this.scrollContainer.scrollHeight;        

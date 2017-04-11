@@ -127,9 +127,7 @@ System.register(['aurelia-framework'], function (_export, _context) {
                     this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
 
                     if (this.windowScroller) {
-                        if (this.scrollY >= this.viewportContainer.offsetTop) {
-                            this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
-                        }
+                        this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
                     }
 
                     this.scrollHeight = this.scrollContainer.scrollHeight;

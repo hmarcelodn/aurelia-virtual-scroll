@@ -97,9 +97,7 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
 
         if (this.windowScroller) {
-            if (this.scrollY >= this.viewportContainer.offsetTop) {
-                this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
-            }
+            this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
         }
 
         this.scrollHeight = this.scrollContainer.scrollHeight;
