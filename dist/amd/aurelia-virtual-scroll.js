@@ -126,7 +126,7 @@ define(['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
             this.firstVisibleIndex = Math.ceil(this.scrollY / this.slotLineHeight);
             this.lastVisibleIndex = this.numItemsPerPage + this.firstVisibleIndex;
 
-            this.firstVisibleIndex = this.firstVisibleIndex > 3 ? this.firstVisibleIndex - 3 : 0;
+            this.firstVisibleIndex = this.firstVisibleIndex > 5 ? this.firstVisibleIndex - 5 : 0;
 
             this.lastVisibleIndex = this.lastVisibleIndex === this.storage.length ? this.lastVisibleIndex : this.lastVisibleIndex + 2;
 
@@ -134,8 +134,11 @@ define(['exports', 'aurelia-framework'], function (exports, _aureliaFramework) {
                 this.lastVisibleIndex = this.storage.length;
             }
 
-            console.log('firstVisibleIdex:' + this.firstVisibleIndex);
-            console.log('lastVisibleIdex:' + this.lastVisibleIndex);
+            if (this.debug) {
+                console.clear();
+                console.log('firstVisibleIdex:' + this.firstVisibleIndex);
+                console.log('lastVisibleIdex:' + this.lastVisibleIndex);
+            }
 
             this.virtualStorage = this.storage.slice(this.firstVisibleIndex, this.lastVisibleIndex);
 
