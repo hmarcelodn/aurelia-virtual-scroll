@@ -84,7 +84,8 @@ export class AureliaVirtualScroll{
         if(this.windowScroller) { 
             this.scrollContainer = window;
 
-            this.viewportContainer.style.height = (((this.storage.length - 1) * this.slotLineHeight) + this.viewportContainer.offsetTop);
+            //this.viewportContainer.style.height = (((this.storage.length - 2) * this.slotLineHeight) + this.viewportContainer.offsetTop);
+            this.viewportContainer.style.height = (((this.storage.length) * this.slotLineHeight));
             this.slotHeight = window.innerHeight;
 
             // Its buggy. It needs a timer for avoid multiple firing.
@@ -224,7 +225,8 @@ export class AureliaVirtualScroll{
     resizeViewPortContainer(){
         if(this.windowScroller){
             if(this.viewportContainer !== undefined){
-                let newHeight = (((this.storage.length - 1) * this.slotLineHeight) + this.viewportContainer.offsetTop);                
+                //let newHeight = (((this.storage.length) * this.slotLineHeight) + this.viewportContainer.offsetTop);           
+                let newHeight = (((this.storage.length) * this.slotLineHeight));        
                 this.viewportContainer.style.height = newHeight < 0 ? 0  + 'px' : newHeight + 'px';
                 this.computeDimensions(); 
             }

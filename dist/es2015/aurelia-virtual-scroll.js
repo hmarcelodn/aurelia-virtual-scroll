@@ -49,7 +49,7 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         if (this.windowScroller) {
             this.scrollContainer = window;
 
-            this.viewportContainer.style.height = (this.storage.length - 1) * this.slotLineHeight + this.viewportContainer.offsetTop;
+            this.viewportContainer.style.height = this.storage.length * this.slotLineHeight;
             this.slotHeight = window.innerHeight;
 
             window.addEventListener('scroll', () => {
@@ -168,7 +168,7 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
     resizeViewPortContainer() {
         if (this.windowScroller) {
             if (this.viewportContainer !== undefined) {
-                let newHeight = (this.storage.length - 1) * this.slotLineHeight + this.viewportContainer.offsetTop;
+                let newHeight = this.storage.length * this.slotLineHeight;
                 this.viewportContainer.style.height = newHeight < 0 ? 0 + 'px' : newHeight + 'px';
                 this.computeDimensions();
             }
