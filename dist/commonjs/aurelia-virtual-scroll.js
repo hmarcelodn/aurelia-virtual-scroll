@@ -60,15 +60,14 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
 
         if (this.windowScroller) {
             this.scrollContainer = window;
-
             this.viewportContainer.style.height = this.storage.length * this.slotLineHeight;
             this.slotHeight = window.innerHeight;
 
             window.addEventListener('scroll', function () {
                 if (window.scrollY > _this.viewportContainer.offsetTop) {
-                    _this.computeDimensions(false);
+                    _this.resizeViewPortContainer();
                 } else if (window.scrollY - _this.lastScrollPosition < 0 && window.scrollY <= _this.viewportContainer.offsetTop) {
-                    _this.computeDimensions(false);
+                    _this.resizeViewPortContainer();
                 }
 
                 _this.lastScrollPosition = window.scrollY;
@@ -81,14 +80,14 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
             this.element.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
 
             this.scrollContainer.addEventListener('scroll', function () {
-                _this.computeDimensions(false);
+                _this.resizeViewPortContainer();
             });
         }
 
         window.addEventListener('resize', this.detectBreakPoints.bind(this));
 
         this.taskQueue.queueTask(function () {
-            _this.computeDimensions(false);
+            _this.resizeViewPortContainer();
             _this.detectBreakPoints();
         });
 
@@ -184,6 +183,11 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
         if (this.windowScroller) {
             if (this.viewportContainer !== undefined) {
                 var newHeight = this.storage.length * this.slotLineHeight;
+
+                if (this.useHeader && !this.firstVisibleIndex) {
+                    newHeight += this.slotLineHeight;
+                }
+
                 this.viewportContainer.style.height = newHeight < 0 ? 0 + 'px' : newHeight + 'px';
                 this.computeDimensions();
             }

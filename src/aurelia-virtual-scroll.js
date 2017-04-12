@@ -83,17 +83,15 @@ export class AureliaVirtualScroll{
 
         if(this.windowScroller) { 
             this.scrollContainer = window;
-
-            //this.viewportContainer.style.height = (((this.storage.length - 2) * this.slotLineHeight) + this.viewportContainer.offsetTop);
             this.viewportContainer.style.height = (((this.storage.length) * this.slotLineHeight));
             this.slotHeight = window.innerHeight;
 
             // Its buggy. It needs a timer for avoid multiple firing.
             window.addEventListener('scroll', () => {              
                 if (window.scrollY > this.viewportContainer.offsetTop) {
-                    this.computeDimensions(false);
+                    this.resizeViewPortContainer();
                 } else if (window.scrollY - this.lastScrollPosition < 0 && window.scrollY <= this.viewportContainer.offsetTop) {
-                    this.computeDimensions(false);
+                    this.resizeViewPortContainer();
                 }
 
                 this.lastScrollPosition = window.scrollY;                
@@ -108,7 +106,7 @@ export class AureliaVirtualScroll{
                 ((this.storage.length - 1) * this.slotLineHeight) - this.viewportContainer.offsetTop) + 'px';   
 
             this.scrollContainer.addEventListener('scroll', () => {
-                this.computeDimensions(false);
+                this.resizeViewPortContainer();
             });                
         }        
 
@@ -116,7 +114,8 @@ export class AureliaVirtualScroll{
         window.addEventListener('resize', this.detectBreakPoints.bind(this));
 
         this.taskQueue.queueTask(() => {                      
-            this.computeDimensions(false);      
+            //this.computeDimensions(false);  
+            this.resizeViewPortContainer();    
             this.detectBreakPoints();                 
         }); 
 
@@ -139,9 +138,7 @@ export class AureliaVirtualScroll{
 
         // Window Scroll Considering Content Above
         if(this.windowScroller){
-            //if(this.scrollY >= this.viewportContainer.offsetTop){
-                this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
-            //}
+            this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
         }
 
         this.scrollHeight = this.scrollContainer.scrollHeight;        
@@ -226,9 +223,14 @@ export class AureliaVirtualScroll{
 
     resizeViewPortContainer(){
         if(this.windowScroller){
-            if(this.viewportContainer !== undefined){
-                //let newHeight = (((this.storage.length) * this.slotLineHeight) + this.viewportContainer.offsetTop);           
+            if(this.viewportContainer !== undefined){          
                 let newHeight = (((this.storage.length) * this.slotLineHeight));        
+
+                //If header is present increase window container
+                if(this.useHeader && !this.firstVisibleIndex){
+                    newHeight+= this.slotLineHeight;
+                }
+
                 this.viewportContainer.style.height = newHeight < 0 ? 0  + 'px' : newHeight + 'px';
                 this.computeDimensions(); 
             }
@@ -300,5 +302,4 @@ export class AureliaVirtualScroll{
     storageChanged(splices){
         this.resizeViewPortContainer();              
     }
-
 }

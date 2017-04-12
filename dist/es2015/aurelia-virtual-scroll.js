@@ -48,15 +48,14 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
 
         if (this.windowScroller) {
             this.scrollContainer = window;
-
             this.viewportContainer.style.height = this.storage.length * this.slotLineHeight;
             this.slotHeight = window.innerHeight;
 
             window.addEventListener('scroll', () => {
                 if (window.scrollY > this.viewportContainer.offsetTop) {
-                    this.computeDimensions(false);
+                    this.resizeViewPortContainer();
                 } else if (window.scrollY - this.lastScrollPosition < 0 && window.scrollY <= this.viewportContainer.offsetTop) {
-                    this.computeDimensions(false);
+                    this.resizeViewPortContainer();
                 }
 
                 this.lastScrollPosition = window.scrollY;
@@ -69,14 +68,14 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
             this.element.style.height = (this.storage.length - 1) * this.slotLineHeight - this.viewportContainer.offsetTop + 'px';
 
             this.scrollContainer.addEventListener('scroll', () => {
-                this.computeDimensions(false);
+                this.resizeViewPortContainer();
             });
         }
 
         window.addEventListener('resize', this.detectBreakPoints.bind(this));
 
         this.taskQueue.queueTask(() => {
-            this.computeDimensions(false);
+            this.resizeViewPortContainer();
             this.detectBreakPoints();
         });
 
@@ -170,6 +169,11 @@ export let AureliaVirtualScroll = (_dec = bindable('fetcher'), _dec2 = bindable(
         if (this.windowScroller) {
             if (this.viewportContainer !== undefined) {
                 let newHeight = this.storage.length * this.slotLineHeight;
+
+                if (this.useHeader && !this.firstVisibleIndex) {
+                    newHeight += this.slotLineHeight;
+                }
+
                 this.viewportContainer.style.height = newHeight < 0 ? 0 + 'px' : newHeight + 'px';
                 this.computeDimensions();
             }
