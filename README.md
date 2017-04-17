@@ -14,6 +14,17 @@
 
     npm install aurelia-virtual-scroller --save
 
+Open your package.json adding the following lines:
+
+    "aurelia": {
+    	"build": {
+      		"resources": [
+        		"aurelia-virtual-scroll/aurelia-virtual-scroll"
+      		]
+    	}
+	}
+  	
+
 All samples below refer to the plugin demo site configuration.
 
 **Window Scroll Setup**
