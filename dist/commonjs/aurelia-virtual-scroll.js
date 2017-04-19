@@ -110,7 +110,7 @@ var AureliaVirtualScroll = exports.AureliaVirtualScroll = (_dec = (0, _aureliaFr
         this.scrollY = this.windowScroller ? window.scrollY : this.viewportContainer.scrollTop;
 
         if (this.windowScroller) {
-            this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
+            this.scrollY = this.scrollY - this.viewportContainer.offsetTop < 0 ? 0 : this.scrollY - this.viewportContainer.offsetTop;
         }
 
         this.scrollHeight = this.scrollContainer.scrollHeight;

@@ -154,7 +154,7 @@ aurelia-virtual-scroller is a custom-attribute you can add to a markup section w
 8. ***headerCallback***: A callback which will be return a string with the template for a header.
 8. ***breakpoints:*** Specify for a width range which height will the rows measure. 
 9. ***enableFetchMode:*** Turn on infinite scroll functionality. In order to have this working its required to pass fetcher a function which returns a promise.
-10. ***fetchBuffer:***: This indicates tha buffer below visible area to start fetching further data. If the scroll is getting the last item in the buffer then it will invoke the fetcher callback in order to retrieve extra data. Always try to keep this number low to render as less as possible items. 
+10. ***fetchBuffer:*** This indicates tha buffer below visible area to start fetching further data. If the scroll is getting the last item in the buffer then it will invoke the fetcher callback in order to retrieve extra data. Always try to keep this number low to render as less as possible items. 
 11. ***arrayPollingMode***: If the array passed to storage function is overwritten then the screen and scroll will be re-computed. If the array is not overwritten but changes are happenning like searches then set this value to true so the plugin will poll every 200 ms to the array in order to check its length. If the length changed the screen will be computed. 
 
 

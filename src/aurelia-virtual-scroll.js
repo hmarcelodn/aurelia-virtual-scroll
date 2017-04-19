@@ -138,15 +138,15 @@ export class AureliaVirtualScroll{
 
         // Window Scroll Considering Content Above
         if(this.windowScroller){
-            this.scrollY = this.scrollY - this.viewportContainer.offsetTop;
+            this.scrollY = (this.scrollY - this.viewportContainer.offsetTop) < 0 ? 0 : (this.scrollY - this.viewportContainer.offsetTop);
         }
 
         this.scrollHeight = this.scrollContainer.scrollHeight;        
 
         this.numItemsPerPage = Math.max(Math.ceil(this.slotHeight / this.slotLineHeight), 0);
 
-        this.firstVisibleIndex = Math.ceil((this.scrollY) / this.slotLineHeight);      
-        this.lastVisibleIndex = (this.numItemsPerPage + this.firstVisibleIndex);             
+        this.firstVisibleIndex = Math.ceil((this.scrollY) / this.slotLineHeight);              
+        this.lastVisibleIndex = this.numItemsPerPage + this.firstVisibleIndex;            
 
         this.firstVisibleIndex = this.firstVisibleIndex > 5 ? 
                                  this.firstVisibleIndex - 5 : 
